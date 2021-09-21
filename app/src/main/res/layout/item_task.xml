@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="task"
+            type="com.example.taskmanager.database.Task" />
+        <variable
+            name="clickListener"
+            type="com.example.taskmanager.homeScreen.TaskListener" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:onClick="@{()->clickListener.onClick(task)}"
+    android:onLongClick="@{()->clickListener.onLongClick(task)}">
+
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:taskTime="@{task}"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTask"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvTime"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:taskText="@{task}" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTask" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

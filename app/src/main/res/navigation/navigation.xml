@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/fragment_home">
+
+
+        <fragment
+            android:id="@+id/fragment_home"
+            android:name="com.example.taskmanager.homeScreen.HomeFragment"
+            android:label="home fragment"
+            tools:layout="@layout/fragment_home">
+
+                <action
+                    android:id="@+id/action_home_to_task"
+                    app:destination="@id/fragment_task"
+                    app:enterAnim="@anim/slide_in_right"
+                    app:popEnterAnim="@anim/slide_in_left" />
+
+        </fragment>
+
+        <fragment
+            android:id="@+id/fragment_task"
+            android:name="com.example.taskmanager.taskScreen.TaskFragment"
+            android:label="fragment_sleep_detail"
+            tools:layout="@layout/fragment_task" >
+                <argument
+                    android:name="taskKey"
+                    app:argType="string" />
+                <action
+                    android:id="@+id/action_task_to_home"
+                    app:destination="@id/fragment_home"
+                    app:launchSingleTop="false"
+                    app:popUpTo="@+id/fragment_home"
+                    app:popUpToInclusive="true" />
+        </fragment>
+
+</navigation>

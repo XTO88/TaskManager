@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Task Manager</string>
+    <string name="create">Create</string>
+
+    <string name="weather_api_key">5a6985524d3232eb13dcf8fba9d99500</string>
+    <string name="add_task">Add Task</string>
+</resources>
