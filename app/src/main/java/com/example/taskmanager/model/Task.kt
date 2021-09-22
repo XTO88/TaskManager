@@ -1,4 +1,4 @@
-package com.example.taskmanager.database
+package com.example.taskmanager.model
 
 import com.google.firebase.firestore.DocumentId
 

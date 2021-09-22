@@ -1,10 +1,8 @@
-package com.example.taskmanager.taskScreen
+package com.example.taskmanager.ui.taskScreen
 
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.lifecycle.*
-import com.example.taskmanager.database.Task
-import com.example.taskmanager.database.FirestoreRepositoryImpl
+import com.example.taskmanager.model.Task
+import com.example.taskmanager.repository.firebase.FirestoreRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.util.*
@@ -12,11 +10,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    dataSource:FirestoreRepositoryImpl,
+    dataSource: FirestoreRepositoryImpl,
     savedStateHandle: SavedStateHandle
 ) :ViewModel() {
 
-    val database = dataSource
+    private val database = dataSource
 
     val task:Task? = dataSource.getTask(savedStateHandle["taskKey"]!!)
 

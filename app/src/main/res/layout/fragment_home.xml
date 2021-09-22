@@ -5,50 +5,87 @@
     <data>
         <variable
             name="homeViewModel"
-            type="com.example.taskmanager.homeScreen.HomeViewModel" />
+            type="com.example.taskmanager.ui.homeScreen.HomeViewModel" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.taskmanager.homeScreen.HomeFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTasks"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/etNewTask"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.homeScreen.HomeFragment">
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="10dp"
-        android:background="@color/teal_700"
-        android:onClick="@{() -> homeViewModel.onAddNewTask()}"
-        android:src="@drawable/ic_baseline_add_24"
-        android:contentDescription="@string/add_task"
-        android:id="@+id/bAdd"/>
+        <ImageView
+            android:id="@+id/ivWeatherIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/weather"
+            app:glide="@{homeViewModel.glide}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:weatherIcon="@{homeViewModel.weather}" />
 
-    <EditText
-        android:id="@+id/etNewTask"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="10dp"
-        android:hint="@string/add_task"
-        android:importantForAutofill="no"
-        android:background="@color/white"
-        android:inputType="text"
-        android:text="@{homeViewModel.newTask}"
-        android:afterTextChanged="@{homeViewModel::setNewTaskText}"
-        app:layout_constraintBottom_toBottomOf="@+id/bAdd"
-        app:layout_constraintEnd_toStartOf="@+id/bAdd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/bAdd" />
+        <TextView
+            android:id="@+id/tvTemperature"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:format="@{@string/format_temperature}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivWeatherIcon"
+            app:weatherTemp="@{homeViewModel.weather}"
+            tools:text="28 C" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTasks"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/etNewTask"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
+
+        <ImageView
+            android:id="@+id/bAdd"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@color/teal_700"
+            android:contentDescription="@string/add_task"
+            android:onClick="@{() -> homeViewModel.onAddNewTask()}"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <EditText
+            android:id="@+id/etNewTask"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:afterTextChanged="@{homeViewModel::setNewTaskText}"
+            android:background="@color/white"
+            android:hint="@string/add_task"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:text="@{homeViewModel.newTask}"
+            app:layout_constraintBottom_toBottomOf="@+id/bAdd"
+            app:layout_constraintEnd_toStartOf="@+id/bAdd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bAdd" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

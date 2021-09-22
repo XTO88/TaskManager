@@ -5,7 +5,7 @@
     <data>
         <variable
             name="taskViewModel"
-            type="com.example.taskmanager.taskScreen.TaskViewModel" />
+            type="com.example.taskmanager.ui.taskScreen.TaskViewModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

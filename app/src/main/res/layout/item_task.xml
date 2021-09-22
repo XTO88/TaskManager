@@ -6,10 +6,10 @@
     <data>
         <variable
             name="task"
-            type="com.example.taskmanager.database.Task" />
+            type="com.example.taskmanager.model.Task" />
         <variable
             name="clickListener"
-            type="com.example.taskmanager.homeScreen.TaskListener" />
+            type="com.example.taskmanager.ui.homeScreen.TaskListener" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"

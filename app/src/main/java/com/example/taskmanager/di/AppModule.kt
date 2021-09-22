@@ -1,0 +1,66 @@
+package com.example.taskmanager.di
+
+import android.content.Context
+import android.content.res.Resources
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.example.taskmanager.common.Constants
+import com.example.taskmanager.repository.firebase.FirestoreRepositoryImpl
+import com.example.taskmanager.repository.retrofit.WeatherApi
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
+import okhttp3.logging.HttpLoggingInterceptor
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideFirestore():FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirestoreRepo(fireStore:FirebaseFirestore): FirestoreRepositoryImpl {
+        val repo = FirestoreRepositoryImpl(fireStore)
+        repo.init()
+        return repo
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherApi(): WeatherApi {
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+        val httpClient: OkHttpClient.Builder = OkHttpClient.Builder()
+        httpClient.addInterceptor(logging)
+
+        return Retrofit.Builder()
+            .baseUrl(Constants.WEATHER_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClient.build())
+            .build()
+            .create(WeatherApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGlide(@ApplicationContext context: Context) :RequestManager{
+        return Glide.with(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResources(@ApplicationContext context: Context):Resources{
+        return context.resources
+    }
+}

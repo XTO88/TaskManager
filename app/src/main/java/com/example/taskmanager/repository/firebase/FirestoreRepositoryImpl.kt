@@ -1,13 +1,12 @@
-package com.example.taskmanager.database
+package com.example.taskmanager.repository.firebase
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.taskmanager.model.Task
 import com.google.firebase.firestore.FirebaseFirestore
-import javax.inject.Inject
 
-class FirestoreRepositoryImpl @Inject constructor(
+class FirestoreRepositoryImpl (
     private val fireStore:FirebaseFirestore
-):FirestoreRepository{
+): FirestoreRepository {
 
     var tasks : MutableLiveData<List<Task>> = MutableLiveData()
 

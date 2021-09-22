@@ -1,4 +1,4 @@
-package com.example.taskmanager.homeScreen
+package com.example.taskmanager.ui.homeScreen
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager.R
-import com.example.taskmanager.database.Task
+import com.example.taskmanager.model.Task
 import com.example.taskmanager.databinding.FragmentHomeBinding
-import com.example.taskmanager.hideKeyboard
+import com.example.taskmanager.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,6 +67,13 @@ class HomeFragment : Fragment() {
             if(close){
                 hideKeyboard()
                 homeViewModel.keyboardClosed()
+            }
+        })
+
+        homeViewModel.showProgress.observe(viewLifecycleOwner,{show->
+            binding.progressBar.visibility = when(show){
+                true -> View.VISIBLE
+                false -> View.GONE
             }
         })
 

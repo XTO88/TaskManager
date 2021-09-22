@@ -1,4 +1,4 @@
-package com.example.taskmanager.taskScreen
+package com.example.taskmanager.ui.taskScreen
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.FragmentTaskBinding
-import com.example.taskmanager.toReadableString
+import com.example.taskmanager.util.toReadableString
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.Calendar.*
