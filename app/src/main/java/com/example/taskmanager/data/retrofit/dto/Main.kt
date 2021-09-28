@@ -1,4 +1,4 @@
-package com.example.taskmanager.repository.retrofit.dto
+package com.example.taskmanager.data.retrofit.dto
 
 data class Main(
     val feels_like: Double,

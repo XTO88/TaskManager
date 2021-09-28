@@ -1,37 +1,36 @@
 package com.example.taskmanager.ui.taskScreen
 
 import androidx.lifecycle.*
-import com.example.taskmanager.model.Task
-import com.example.taskmanager.repository.firebase.FirestoreRepositoryImpl
+import com.example.taskmanager.domain.model.Task
+import com.example.taskmanager.domain.use_case.task.TaskOperationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    dataSource: FirestoreRepositoryImpl,
+    private val taskOperationsUseCase: TaskOperationsUseCase,
     savedStateHandle: SavedStateHandle
 ) :ViewModel() {
 
-    private val database = dataSource
+    val task:Task? = taskOperationsUseCase.getTask(savedStateHandle["taskKey"]!!)
 
-    val task:Task? = dataSource.getTask(savedStateHandle["taskKey"]!!)
-
-    private val _navigateToHome = MutableLiveData<Boolean?>()
-
-    val navigateToHome: LiveData<Boolean?>
+    private val _navigateToHome = MutableStateFlow(false)
+    val navigateToHome: StateFlow<Boolean>
         get() = _navigateToHome
 
     fun doneNavigating() {
-        _navigateToHome.value = null
+        _navigateToHome.value = false
     }
 
     fun updateText(text:String){
         viewModelScope.launch {
             task?.let{
                 task.text = text
-                database.updateTask(task)
+                taskOperationsUseCase.updateTask(task)
             }
         }
     }
@@ -40,7 +39,7 @@ class TaskViewModel @Inject constructor(
         viewModelScope.launch {
             task?.let {
                 task.time = time.time
-                database.updateTask(task)
+                taskOperationsUseCase.updateTask(task)
             }
         }
     }

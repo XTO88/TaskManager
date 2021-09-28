@@ -1,4 +1,4 @@
-package com.example.taskmanager.repository.retrofit.dto
+package com.example.taskmanager.data.retrofit.dto
 
 data class Coord(
     val lat: Double,

@@ -1,6 +1,6 @@
-package com.example.taskmanager.repository.retrofit
+package com.example.taskmanager.data.retrofit
 
-import com.example.taskmanager.repository.retrofit.dto.WeatherDto
+import com.example.taskmanager.data.retrofit.dto.WeatherDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

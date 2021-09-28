@@ -1,6 +1,7 @@
-package com.example.taskmanager.repository.firebase
+package com.example.taskmanager.domain.repository
 
-import com.example.taskmanager.model.Task
+import com.example.taskmanager.domain.model.Task
+import kotlinx.coroutines.flow.StateFlow
 
 interface FirestoreRepository {
 
@@ -10,4 +11,5 @@ interface FirestoreRepository {
     suspend fun deleteTask(t: Task)
 
     fun getTask(id: String): Task?
+    fun getTasks():StateFlow<List<Task>>
 }

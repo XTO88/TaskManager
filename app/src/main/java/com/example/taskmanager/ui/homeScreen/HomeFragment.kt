@@ -1,19 +1,25 @@
 package com.example.taskmanager.ui.homeScreen
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager.R
-import com.example.taskmanager.model.Task
+import com.example.taskmanager.common.Resource
 import com.example.taskmanager.databinding.FragmentHomeBinding
+import com.example.taskmanager.domain.model.Task
 import com.example.taskmanager.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -42,18 +48,16 @@ class HomeFragment : Fragment() {
         val adapter = TaskAdapter(TaskListener({ task ->
             task?.let { homeViewModel.completeTask(task) }
         }, fun(task: Task): Boolean {
-            homeViewModel.openTask( task.id)
+            homeViewModel.openTask(task.id)
             return true
         }))
         binding.rvTasks.adapter = adapter
 
-        homeViewModel.tasks.observe(viewLifecycleOwner, {
-            it?.let {
+        homeViewModel.tasks.onEach {
                 adapter.submitList(it)
-            }
-        })
+        }.launchIn(lifecycleScope)
 
-        homeViewModel.navigateToTaskDetail.observe(viewLifecycleOwner, { id ->
+        homeViewModel.navigateToTaskDetail.onEach { id->
             id?.let {
                 this.findNavController().navigate(
                     HomeFragmentDirections
@@ -61,21 +65,30 @@ class HomeFragment : Fragment() {
                 )
                 homeViewModel.doneNavigating()
             }
-        })
 
-        homeViewModel.closeKeyboard.observe(viewLifecycleOwner,{close ->
-            if(close){
+        }.launchIn(lifecycleScope)
+
+        homeViewModel.closeKeyboard.onEach { close ->
+            if (close) {
                 hideKeyboard()
                 homeViewModel.keyboardClosed()
             }
-        })
+        }.launchIn(lifecycleScope)
 
-        homeViewModel.showProgress.observe(viewLifecycleOwner,{show->
-            binding.progressBar.visibility = when(show){
-                true -> View.VISIBLE
-                false -> View.GONE
+        homeViewModel.weather.onEach { result ->
+            when (result) {
+                is Resource.Loading -> {
+                    binding.progressBar.isVisible = true
+                }
+                is Resource.Success -> {
+                    binding.progressBar.isVisible = false
+                }
+                is Resource.Error -> {
+                    binding.progressBar.isVisible = false
+                    result.message?.let { Log.e(TAG, it) }
+                }
             }
-        })
+        }.launchIn(lifecycleScope)
 
         return binding.root
     }

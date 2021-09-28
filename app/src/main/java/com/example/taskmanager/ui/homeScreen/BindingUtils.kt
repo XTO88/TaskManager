@@ -2,10 +2,11 @@ package com.example.taskmanager.ui.homeScreen
 
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.taskmanager.model.Task
+import com.example.taskmanager.domain.model.Task
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.RequestManager
-import com.example.taskmanager.model.Weather
+import com.example.taskmanager.common.Resource
+import com.example.taskmanager.domain.model.Weather
 import com.example.taskmanager.util.toReadableString
 import java.util.*
 
@@ -24,16 +25,22 @@ fun TextView.setTaskTime(item: Task?) {
 }
 
 @BindingAdapter("weatherTemp","format")
-fun TextView.setWeatherTemp(item: Weather?, format:String){
-    item?.let {
-        text = String.format(Locale.getDefault(),format,item.temperature)
+fun TextView.setWeatherTemp(resource: Resource<Weather>, format:String){
+    if(resource is Resource.Success){
+        resource.data?.let {
+            text = String.format(Locale.getDefault(),format,resource.data.temperature)
+        }
+
     }
 }
 
 @BindingAdapter("weatherIcon","glide")
-fun ImageView.setWeatherIcon(item:Weather?,glide:RequestManager){
-    item?.let {
-        val iconUrl = "https://openweathermap.org/img/wn/${item.icon}@2x.png"
-        glide.load(iconUrl).into(this)
+fun ImageView.setWeatherIcon(resource: Resource<Weather>, glide:RequestManager){
+    if(resource is Resource.Success){
+        resource.data?.let {
+            val iconUrl = "https://openweathermap.org/img/wn/${resource.data.icon}@2x.png"
+            glide.load(iconUrl).into(this)
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.taskmanager.repository.retrofit.dto
+package com.example.taskmanager.data.retrofit.dto
 
 data class WeatherDto(
     val base: String,
@@ -16,8 +16,8 @@ data class WeatherDto(
     val wind: Wind
 )
 
-fun WeatherDto.toWeather():com.example.taskmanager.model.Weather{
-    return com.example.taskmanager.model.Weather(
+fun WeatherDto.toWeather(): com.example.taskmanager.domain.model.Weather{
+    return com.example.taskmanager.domain.model.Weather(
         city = name,
         temperature = main.temp.toInt(),
         icon = weather[0].icon

@@ -1,73 +1,50 @@
 package com.example.taskmanager.ui.homeScreen
 
 import android.text.Editable
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.RequestManager
-import com.example.taskmanager.model.Task
-import com.example.taskmanager.model.Weather
-import com.example.taskmanager.repository.firebase.FirestoreRepositoryImpl
-import com.example.taskmanager.repository.retrofit.WeatherApiImpl
+import com.example.taskmanager.common.Resource
+import com.example.taskmanager.domain.model.Task
+import com.example.taskmanager.domain.model.Weather
+import com.example.taskmanager.domain.use_case.task.GetTasksUseCase
+import com.example.taskmanager.domain.use_case.task.TaskOperationsUseCase
+import com.example.taskmanager.domain.use_case.weather.GetWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
-import retrofit2.HttpException
-import java.io.IOException
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 const val TAG = "HomeViewModel"
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val fireStoreRepo: FirestoreRepositoryImpl,
-    private val weatherApi: WeatherApiImpl,
+    getTasksUseCase: GetTasksUseCase,
+    private val weatherUseCase: GetWeatherUseCase,
+    private val taskOperationsUseCase: TaskOperationsUseCase,
     val glide:RequestManager
 ) : ViewModel() {
 
-    private val _navigateToTaskDetail = MutableLiveData<String?>()
-    val navigateToTaskDetail: LiveData<String?>
-        get() = _navigateToTaskDetail
+    private val _navigateToTaskDetail = MutableStateFlow<String?>(null)
+    val navigateToTaskDetail: StateFlow<String?>
+        get() = _navigateToTaskDetail.asStateFlow()
 
-    private val _closeKeyboard = MutableLiveData<Boolean>()
-    val closeKeyboard : LiveData<Boolean>
-    get() = _closeKeyboard
+    private val _closeKeyboard = MutableStateFlow(false)
+    val closeKeyboard : StateFlow<Boolean>
+    get() = _closeKeyboard.asStateFlow()
 
-    private val _newTask = MutableLiveData<String?>()
-    val newTask : LiveData<String?>
+    private val _newTask = MutableStateFlow<String?>("")
+    val newTask : StateFlow<String?>
          get() = _newTask
 
-    private val _weather = MutableLiveData<Weather?>()
-    val weather : LiveData<Weather?>
-    get() = _weather
+    val tasks = getTasksUseCase()
 
-    private val _showProgress = MutableLiveData<Boolean>()
-    val showProgress : LiveData<Boolean>
-    get() = _showProgress
 
-    val tasks = fireStoreRepo.tasks
+    lateinit var weather:StateFlow<Resource<Weather>>
 
     init {
         viewModelScope.launch {
-            _showProgress.value = true
-            try {
-                _weather.value = weatherApi.getWeather()
-                _showProgress.value = false
-            } catch (e: IOException){
-                Log.e(TAG, e.message?:"IOException" )
-                _showProgress.value = false
-                return@launch
-            } catch (e:HttpException){
-                Log.e(TAG,e.message?:"HttpException")
-                _showProgress.value = false
-                return@launch
-            } catch (e:NullPointerException){
-                Log.e(TAG,e.message?:"NullPointerException")
-                e.printStackTrace()
-                _showProgress.value = false
-                return@launch
-            }
+            weather = weatherUseCase("Kyiv").stateIn(viewModelScope)
         }
     }
 
@@ -90,7 +67,7 @@ class HomeViewModel @Inject constructor(
     fun onAddNewTask(){
         viewModelScope.launch {
             if(!newTask.value.isNullOrEmpty()){
-                fireStoreRepo.insertTask(Task(newTask.value!!))
+                taskOperationsUseCase.insertTask(Task(newTask.value!!))
                 _newTask.value = ""
                 _closeKeyboard.value = true
             }
@@ -99,7 +76,7 @@ class HomeViewModel @Inject constructor(
 
     fun completeTask(t:Task){
         viewModelScope.launch {
-            fireStoreRepo.completeTask(t)
+            taskOperationsUseCase.completeTask(t)
         }
     }
 }

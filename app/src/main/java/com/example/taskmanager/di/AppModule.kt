@@ -5,8 +5,11 @@ import android.content.res.Resources
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.example.taskmanager.common.Constants
-import com.example.taskmanager.repository.firebase.FirestoreRepositoryImpl
-import com.example.taskmanager.repository.retrofit.WeatherApi
+import com.example.taskmanager.domain.repository.FirestoreRepository
+import com.example.taskmanager.data.firestore.FirestoreRepositoryImpl
+import com.example.taskmanager.data.retrofit.WeatherApi
+import com.example.taskmanager.data.retrofit.WeatherRepositoryImpl
+import com.example.taskmanager.domain.repository.WeatherRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -26,11 +29,17 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideResources(@ApplicationContext context: Context):Resources{
+        return context.resources
+    }
+
+    @Provides
+    @Singleton
     fun provideFirestore():FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton
-    fun provideFirestoreRepo(fireStore:FirebaseFirestore): FirestoreRepositoryImpl {
+    fun provideFirestoreRepo(fireStore:FirebaseFirestore): FirestoreRepository {
         val repo = FirestoreRepositoryImpl(fireStore)
         repo.init()
         return repo
@@ -54,13 +63,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGlide(@ApplicationContext context: Context) :RequestManager{
-        return Glide.with(context)
+    fun provideWeatherRepository(api:WeatherApi, resources: Resources):WeatherRepository{
+        return WeatherRepositoryImpl(api,resources)
     }
 
     @Provides
     @Singleton
-    fun provideResources(@ApplicationContext context: Context):Resources{
-        return context.resources
+    fun provideGlide(@ApplicationContext context: Context) :RequestManager{
+        return Glide.with(context)
     }
 }

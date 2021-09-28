@@ -1,4 +1,4 @@
-package com.example.taskmanager.model
+package com.example.taskmanager.domain.model
 
 data class Weather(
     val city: String,

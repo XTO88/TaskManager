@@ -1,14 +1,16 @@
-package com.example.taskmanager.repository.firebase
+package com.example.taskmanager.data.firestore
 
-import androidx.lifecycle.MutableLiveData
-import com.example.taskmanager.model.Task
+import com.example.taskmanager.domain.model.Task
+import com.example.taskmanager.domain.repository.FirestoreRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class FirestoreRepositoryImpl (
     private val fireStore:FirebaseFirestore
 ): FirestoreRepository {
 
-    var tasks : MutableLiveData<List<Task>> = MutableLiveData()
+    private val tasks = MutableStateFlow<List<Task>>(emptyList())
 
     fun init() {
         fireStore.collection("tasks").orderBy("completed").orderBy("time").
@@ -24,8 +26,12 @@ class FirestoreRepositoryImpl (
         }
     }
 
-    override fun getTask(id: String): Task?{
-        return tasks.value?.single { it.id == id }
+    override fun getTask(id: String): Task{
+        return tasks.value.single { it.id == id }
+    }
+
+    override fun getTasks(): StateFlow<List<Task>> {
+        return tasks
     }
 
     override suspend fun insertTask(t: Task) {

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.taskmanager.model.Task
+import com.example.taskmanager.domain.model.Task
 import com.example.taskmanager.databinding.ItemTaskBinding
 
 class TaskAdapter(private val clickListener: TaskListener) : ListAdapter<Task,

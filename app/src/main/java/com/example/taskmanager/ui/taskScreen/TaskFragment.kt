@@ -10,18 +10,21 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.taskmanager.R
 import com.example.taskmanager.databinding.FragmentTaskBinding
 import com.example.taskmanager.util.toReadableString
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.*
 import java.util.Calendar.*
 
 @AndroidEntryPoint
 class TaskFragment : Fragment() {
 
-    val taskViewModel: TaskViewModel by viewModels()
+    private val taskViewModel: TaskViewModel by viewModels()
 
     private var _binding: FragmentTaskBinding? = null
     private val binding get() = _binding!!
@@ -38,14 +41,15 @@ class TaskFragment : Fragment() {
         )
         binding.taskViewModel = taskViewModel
 
-        taskViewModel.navigateToHome.observe(viewLifecycleOwner, { navigate ->
-            if (navigate == true) {
+        taskViewModel.navigateToHome.onEach { navigate ->
+            if (navigate) {
                 this.findNavController().navigate(
                     TaskFragmentDirections.actionTaskToHome()
                 )
                 taskViewModel.doneNavigating()
             }
-        })
+
+        }.launchIn(lifecycleScope)
 
         binding.lifecycleOwner = this.viewLifecycleOwner
 
