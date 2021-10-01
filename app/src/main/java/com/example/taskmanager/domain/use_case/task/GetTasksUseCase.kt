@@ -5,9 +5,9 @@ import com.example.taskmanager.domain.repository.FirestoreRepository
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class GetTasksUseCase @Inject constructor(
-    private val repo:FirestoreRepository
-){
+class GetTasksUseCase @Inject constructor(){
+    @Inject lateinit var repo:FirestoreRepository
+
     operator fun invoke():StateFlow<List<Task>>{
         return repo.getTasks()
     }

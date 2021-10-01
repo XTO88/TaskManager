@@ -8,35 +8,39 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager.R
+import com.example.taskmanager.appComponent
 import com.example.taskmanager.common.Resource
 import com.example.taskmanager.databinding.FragmentHomeBinding
 import com.example.taskmanager.domain.model.Task
 import com.example.taskmanager.util.hideKeyboard
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var factory: HomeViewModelFactory
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        context?.appComponent?.inject(this)
         _binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
 
-        val homeViewModel: HomeViewModel by viewModels()
+
+
+        val homeViewModel= factory.create(HomeViewModel::class.java)
 
         binding.homeViewModel = homeViewModel
 

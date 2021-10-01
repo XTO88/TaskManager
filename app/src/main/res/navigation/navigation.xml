@@ -23,7 +23,7 @@
         <fragment
             android:id="@+id/fragment_task"
             android:name="com.example.taskmanager.ui.taskScreen.TaskFragment"
-            android:label="fragment_sleep_detail"
+            android:label="fragment task"
             tools:layout="@layout/fragment_task" >
                 <argument
                     android:name="taskKey"

@@ -3,20 +3,18 @@ package com.example.taskmanager.ui.taskScreen
 import androidx.lifecycle.*
 import com.example.taskmanager.domain.model.Task
 import com.example.taskmanager.domain.use_case.task.TaskOperationsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 import javax.inject.Inject
 
-@HiltViewModel
-class TaskViewModel @Inject constructor(
+class TaskViewModel (
     private val taskOperationsUseCase: TaskOperationsUseCase,
-    savedStateHandle: SavedStateHandle
+    taskId: String
 ) :ViewModel() {
 
-    val task:Task? = taskOperationsUseCase.getTask(savedStateHandle["taskKey"]!!)
+    val task:Task? = taskOperationsUseCase.getTask(taskId)
 
     private val _navigateToHome = MutableStateFlow(false)
     val navigateToHome: StateFlow<Boolean>

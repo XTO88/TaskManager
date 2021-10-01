@@ -3,8 +3,6 @@ package com.example.taskmanager.data.retrofit
 import android.content.res.Resources
 import com.example.taskmanager.R
 import com.example.taskmanager.data.retrofit.dto.WeatherDto
-import com.example.taskmanager.domain.model.Weather
-import com.example.taskmanager.data.retrofit.dto.toWeather
 import com.example.taskmanager.domain.repository.WeatherRepository
 import javax.inject.Inject
 

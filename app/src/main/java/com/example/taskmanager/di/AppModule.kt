@@ -1,5 +1,6 @@
 package com.example.taskmanager.di
 
+import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import com.bumptech.glide.Glide
@@ -13,9 +14,6 @@ import com.example.taskmanager.domain.repository.WeatherRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,12 +22,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 
 @Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
+class AppModule (
+    private  val context: Context
+        ){
 
     @Provides
     @Singleton
-    fun provideResources(@ApplicationContext context: Context):Resources{
+    fun provideResources():Resources{
         return context.resources
     }
 
@@ -69,7 +68,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGlide(@ApplicationContext context: Context) :RequestManager{
+    fun provideGlide() :RequestManager{
         return Glide.with(context)
     }
 }

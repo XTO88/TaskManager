@@ -13,18 +13,22 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.taskmanager.R
+import com.example.taskmanager.appComponent
 import com.example.taskmanager.databinding.FragmentTaskBinding
 import com.example.taskmanager.util.toReadableString
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.*
 import java.util.Calendar.*
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class TaskFragment : Fragment() {
 
-    private val taskViewModel: TaskViewModel by viewModels()
+    @Inject
+    lateinit var factory: TaskViewModelFactory.Factory
+
+
+    lateinit var taskViewModel:TaskViewModel
 
     private var _binding: FragmentTaskBinding? = null
     private val binding get() = _binding!!
@@ -35,10 +39,14 @@ class TaskFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        context?.appComponent?.inject(this)
         _binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_task, container, false
         )
+
+        val taskId  = arguments?.getString("taskKey")
+        taskViewModel  = factory.create(taskId!!).create(TaskViewModel::class.java)
+
         binding.taskViewModel = taskViewModel
 
         taskViewModel.navigateToHome.onEach { navigate ->
