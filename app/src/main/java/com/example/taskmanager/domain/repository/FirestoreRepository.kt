@@ -1,6 +1,8 @@
 package com.example.taskmanager.domain.repository
 
+import com.example.taskmanager.common.Resource
 import com.example.taskmanager.domain.model.Task
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface FirestoreRepository {

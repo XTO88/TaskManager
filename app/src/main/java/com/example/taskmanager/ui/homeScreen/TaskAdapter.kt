@@ -1,6 +1,5 @@
 package com.example.taskmanager.ui.homeScreen
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -29,10 +28,6 @@ class TaskAdapter(private val clickListener: TaskListener) : ListAdapter<Task,
             binding.task = item
             binding.clickListener = listener
             binding.executePendingBindings()
-            when (item.completed) {
-                false -> binding.tvTask.setTextColor(Color.BLACK)
-                true -> binding.tvTask.setTextColor(Color.GRAY)
-            }
         }
 
         companion object {

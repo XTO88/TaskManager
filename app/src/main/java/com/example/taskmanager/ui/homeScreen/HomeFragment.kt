@@ -1,7 +1,6 @@
 package com.example.taskmanager.ui.homeScreen
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,19 +19,21 @@ import com.example.taskmanager.util.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHomeBinding
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
 
@@ -85,16 +86,11 @@ class HomeFragment : Fragment() {
                 }
                 is Resource.Error -> {
                     binding.progressBar.isVisible = false
-                    result.message?.let { Log.e(TAG, it) }
+                    result.message?.let { Timber.e(it) }
                 }
             }
         }.launchIn(lifecycleScope)
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 }

@@ -15,8 +15,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-const val TAG = "HomeViewModel"
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     getTasksUseCase: GetTasksUseCase,
@@ -38,7 +36,6 @@ class HomeViewModel @Inject constructor(
          get() = _newTask
 
     val tasks = getTasksUseCase()
-
 
     lateinit var weather:StateFlow<Resource<Weather>>
 

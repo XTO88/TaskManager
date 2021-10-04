@@ -5,28 +5,34 @@ import com.example.taskmanager.domain.repository.FirestoreRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
-class FirestoreRepositoryImpl (
-    private val fireStore:FirebaseFirestore
-): FirestoreRepository {
+class FirestoreRepositoryImpl(
+    fireStore: FirebaseFirestore
+) : FirestoreRepository {
 
     private val tasks = MutableStateFlow<List<Task>>(emptyList())
 
-    fun init() {
-        fireStore.collection("tasks").orderBy("completed").orderBy("time").
-        addSnapshotListener { snapshot, _ ->
-            val list = ArrayList<Task>()
-            snapshot?.let {
-                for (d in snapshot.documents) {
-                    d.toObject(Task::class.java)?.let { it1 -> list.add(it1) }
-                }
-            }
+    private val collection = fireStore.collection("tasks")
 
-            tasks.value = list
+    fun init() {
+        collection.orderBy("completed").orderBy("time").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Timber.e(error.message ?: "FirebaseError")
+            } else {
+                val list = ArrayList<Task>()
+                snapshot?.let {
+                    for (d in snapshot.documents) {
+                        d.toObject(Task::class.java)?.let { it1 -> list.add(it1) }
+                    }
+                }
+                tasks.value = list
+            }
         }
     }
 
-    override fun getTask(id: String): Task{
+    override fun getTask(id: String): Task {
         return tasks.value.single { it.id == id }
     }
 
@@ -35,18 +41,19 @@ class FirestoreRepositoryImpl (
     }
 
     override suspend fun insertTask(t: Task) {
-        fireStore.collection("tasks").add(t)
+        collection.add(t).await()
     }
 
     override suspend fun updateTask(t: Task) {
-        fireStore.collection("tasks").document(t.id).set(t)
+        collection.document(t.id).set(t).await()
     }
 
     override suspend fun completeTask(t: Task) {
-        fireStore.collection("tasks").document(t.id).update("completed",!t.completed)
+        collection.document(t.id).update("completed", !t.completed).await()
     }
 
     override suspend fun deleteTask(t: Task) {
-        fireStore.collection("tasks").document(t.id).delete()
+        collection.document(t.id).delete().await()
     }
+
 }

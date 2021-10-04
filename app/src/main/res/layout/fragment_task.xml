@@ -29,14 +29,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:taskText="@{taskViewModel.task}" />
 
-    <TextView
+    <com.example.taskmanager.view.DateTextView
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/teal_700"
         android:textSize="25sp"
         android:gravity="center"
-        app:taskTime="@{taskViewModel.task}"
+        app:taskDate="@{taskViewModel.task}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etTask" />

@@ -1,5 +1,6 @@
 package com.example.taskmanager.ui.homeScreen
 
+import android.graphics.Color
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.taskmanager.domain.model.Task
@@ -14,6 +15,10 @@ import java.util.*
 fun TextView.setTaskText(item: Task?) {
     item?.let {
         text = item.text
+        when (it.completed) {
+            false -> setTextColor(Color.BLACK)
+            true -> setTextColor(Color.GRAY)
+        }
     }
 }
 
